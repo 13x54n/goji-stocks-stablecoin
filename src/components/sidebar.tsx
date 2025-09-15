@@ -1,8 +1,9 @@
 "use client";
 
-import { Home, Clock, TrendingUp, Award, GraduationCap } from "lucide-react";
+import { Home, Clock, TrendingUp, Award, GraduationCap, LogOut, Fingerprint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useAuth } from "@/contexts/AuthContext";
 
 type Page = "home" | "assets" | "transactions" | "earn" | "learning" | "trade";
 
@@ -20,6 +21,8 @@ const navigationItems = [
 ];
 
 export function Sidebar({ activePage, setActivePage }: SidebarProps) {
+  const { user, signInWithGoogle, logout } = useAuth();
+
   return (
     <div className="w-72 h-screen bg-black border-r border-sidebar-border flex flex-col">
       {/* Logo */}
@@ -42,11 +45,10 @@ export function Sidebar({ activePage, setActivePage }: SidebarProps) {
                 <Button
                   variant="ghost"
                   onClick={() => setActivePage(item.page)}
-                  className={`w-full flex items-center text-lg font-semibold rounded-xl justify-start gap-3 h-12 cursor-pointer ${
-                    isActive
-                      ? "bg-[#fff] hover:bg-[#fff] text-[#000]"
-                      : "text-sidebar-foreground hover:bg-[#fff] hover:text-[#000]"
-                  }`}
+                  className={`w-full flex items-center text-lg font-semibold rounded-xl justify-start gap-3 h-12 cursor-pointer ${isActive
+                    ? "bg-[#fff] hover:bg-[#fff] text-[#000]"
+                    : "text-sidebar-foreground hover:bg-[#fff] hover:text-[#fff]"
+                    }`}
                 >
                   <Icon size={24} />
                   {item.label}
@@ -54,6 +56,17 @@ export function Sidebar({ activePage, setActivePage }: SidebarProps) {
               </li>
             );
           })}
+
+          {
+            !user && (
+              <Button
+                className="bg-white mt-4 w-full text-md rounded-full text-black hover:bg-white cursor-pointer py-6"
+                onClick={signInWithGoogle}
+              >
+                <Fingerprint className="w-4 h-4" /> Sign in with Google
+              </Button>
+            )
+          }
         </ul>
       </nav>
     </div>

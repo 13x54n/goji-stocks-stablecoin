@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight, ArrowDownRight, Clock, CheckCircle, XCircle } from "lucide-react";
+import Image from "next/image";
 
 const transactions = [
   {
@@ -9,7 +10,7 @@ const transactions = [
     type: "buy",
     asset: "Bitcoin",
     symbol: "BTC",
-    icon: "₿",
+    image: "https://assets.coingecko.com/coins/images/1/large/bitcoin.png",
     amount: "0.05",
     value: "$3,200.00",
     status: "completed",
@@ -21,7 +22,7 @@ const transactions = [
     type: "sell",
     asset: "Ethereum",
     symbol: "ETH",
-    icon: "Ξ",
+    image: "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
     amount: "2.1",
     value: "$7,650.00",
     status: "completed",
@@ -33,7 +34,7 @@ const transactions = [
     type: "buy",
     asset: "Solana",
     symbol: "SOL",
-    icon: "◎",
+    image: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
     amount: "25",
     value: "$4,587.50",
     status: "pending",
@@ -45,7 +46,7 @@ const transactions = [
     type: "sell",
     asset: "BNB",
     symbol: "BNB",
-    icon: "B",
+    image: "https://assets.coingecko.com/coins/images/825/large/bnb-icon2_2x.png",
     amount: "1.5",
     value: "$1,121.25",
     status: "failed",
@@ -57,7 +58,7 @@ const transactions = [
     type: "buy",
     asset: "Cardano",
     symbol: "ADA",
-    icon: "A",
+    image: "https://assets.coingecko.com/coins/images/975/large/cardano.png",
     amount: "1000",
     value: "$500.00",
     status: "completed",
@@ -69,7 +70,7 @@ const transactions = [
     type: "sell",
     asset: "Tether",
     symbol: "USDT",
-    icon: "₮",
+    image: "https://assets.coingecko.com/coins/images/325/large/Tether.png",
     amount: "500",
     value: "$500.00",
     status: "completed",
@@ -109,7 +110,6 @@ export function TransactionsPage() {
     <div className="flex-1 p-6">
       <div className="mb-6">
         <h1 className="text-3xl font-bold text-foreground mb-2">Transactions</h1>
-        <p className="text-muted-foreground">View your trading history and transaction details</p>
       </div>
 
       {/* Transaction Stats */}
@@ -155,58 +155,90 @@ export function TransactionsPage() {
         </Card>
       </div>
 
-      {/* Transactions List */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Transaction History</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {transactions.map((tx) => (
-              <div key={tx.id} className="flex items-center justify-between p-4 border border-border rounded-lg hover:bg-accent/50 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                    <span className="text-lg font-bold">{tx.icon}</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    {tx.type === "buy" ? (
-                      <ArrowUpRight className="w-5 h-5 text-green-400" />
-                    ) : (
-                      <ArrowDownRight className="w-5 h-5 text-red-400" />
-                    )}
-                    <div>
-                      <p className="font-semibold text-foreground capitalize">{tx.type} {tx.asset}</p>
-                      <p className="text-sm text-muted-foreground">{tx.time}</p>
+      {/* Transactions Table */}
+      <div className="bg-black rounded-lg overflow-hidden border border-border">
+        <div className="hidden md:block">
+          <table className="w-full">
+            <thead className="border-b border-border">
+              <tr className="text-left">
+                <th className="p-4 font-medium text-muted-foreground">Asset</th>
+                <th className="p-4 font-medium text-muted-foreground text-center">Amount</th>
+                <th className="p-4 font-medium text-muted-foreground text-center">Status</th>
+                <th className="p-4 font-medium text-muted-foreground text-right">Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              {transactions.map((tx) => (
+                <tr key={tx.id} className="border-b border-border hover:bg-accent/50 transition-colors">
+                  <td className="p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center overflow-hidden">
+                        <Image src={tx.image} alt={tx.asset} width={40} height={40} className="w-10 h-10 object-contain" />
+                      </div>
+                      <div>
+                        <div className="font-semibold text-foreground">{tx.asset}</div>
+                        <div className="text-sm text-muted-foreground">{tx.symbol}</div>
+                      </div>
                     </div>
+                  </td>
+                  <td className="p-4 text-center">
+                    <span className="flex items-center justify-end gap-2 flex-col">
+                      <span>
+                        {tx.type === 'buy' ? '+' : '-'}{tx.amount} {tx.symbol}
+                      </span>
+                      <span>
+                        {tx.value}
+                      </span>
+                    </span>
+                  </td>
+                  <td className="p-4 text-center">
+                    <div className="flex justify-center items-center gap-2">
+                      {/* {getStatusIcon(tx.status)} */}
+                      {getStatusBadge(tx.status)}
+                    </div>
+                  </td>
+                  <td className="p-4 text-right">{tx.time}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile list fallback */}
+        <div className="md:hidden p-4 space-y-4">
+          {transactions.map((tx) => (
+            <div key={tx.id} className="bg-card border border-border rounded-lg p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-black rounded-full flex items-center justify-center overflow-hidden">
+                    <Image src={tx.image} alt={tx.asset} width={40} height={40} className="w-10 h-10 object-contain" />
+                  </div>
+                  <div>
+                    <div className="font-semibold text-foreground">{tx.asset}</div>
+                    <div className="text-sm text-muted-foreground">{tx.symbol}</div>
                   </div>
                 </div>
-
-                <div className="flex items-center gap-6">
-                  <div className="text-right">
-                    <p className="font-semibold text-foreground">
-                      {tx.type === "buy" ? "+" : "-"}{tx.amount} {tx.symbol}
-                    </p>
-                    <p className="text-sm text-muted-foreground">{tx.value}</p>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    {getStatusIcon(tx.status)}
-                    {getStatusBadge(tx.status)}
-                  </div>
-
-                  <Button variant="outline" size="sm">
-                    View Details
-                  </Button>
-                </div>
+                <div className="capitalize">{tx.type}</div>
               </div>
-            ))}
-          </div>
-
-          <div className="mt-6 text-center">
-            <Button variant="outline">Load More Transactions</Button>
-          </div>
-        </CardContent>
-      </Card>
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">Amount</div>
+                <div className="font-medium text-foreground">{tx.type === 'buy' ? '+' : '-'}{tx.amount} {tx.symbol}</div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">Value</div>
+                <div className="text-foreground">{tx.value}</div>
+              </div>
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center gap-2">
+                  {getStatusIcon(tx.status)}
+                  {getStatusBadge(tx.status)}
+                </div>
+                <div className="text-sm text-muted-foreground">{tx.time}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

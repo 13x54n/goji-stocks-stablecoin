@@ -1,127 +1,92 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, Lock, Coins, Award, Zap } from "lucide-react";
+import { TrendingUp, Coins, Award, Zap, Link as LinkIcon, Copy } from "lucide-react";
+import { useMemo, useState } from "react";
 
-const earningOptions = [
-  {
-    id: 1,
-    title: "Bitcoin Staking",
-    description: "Earn rewards by staking your Bitcoin",
-    apy: "4.2%",
-    minAmount: "0.1 BTC",
-    icon: "₿",
-    color: "text-orange-500",
-    status: "active",
-    balance: "0.25 BTC",
-    earned: "+0.0012 BTC"
-  },
-  {
-    id: 2,
-    title: "Ethereum Staking",
-    description: "Stake ETH and earn rewards",
-    apy: "5.8%",
-    minAmount: "32 ETH",
-    icon: "Ξ",
-    color: "text-blue-500",
-    status: "available",
-    balance: "0 ETH",
-    earned: "0 ETH"
-  },
-  {
-    id: 3,
-    title: "Solana Staking",
-    description: "High yield staking on Solana network",
-    apy: "7.5%",
-    minAmount: "10 SOL",
-    icon: "◎",
-    color: "text-purple-500",
-    status: "active",
-    balance: "50 SOL",
-    earned: "+0.25 SOL"
-  },
-  {
-    id: 4,
-    title: "Liquidity Mining",
-    description: "Provide liquidity and earn fees",
-    apy: "12.3%",
-    minAmount: "$100",
-    icon: "💧",
-    color: "text-green-500",
-    status: "available",
-    balance: "$0",
-    earned: "$0"
-  },
-  {
-    id: 5,
-    title: "Yield Farming",
-    description: "Farm tokens by providing liquidity",
-    apy: "18.7%",
-    minAmount: "$500",
-    icon: "🌾",
-    color: "text-yellow-500",
-    status: "available",
-    balance: "$0",
-    earned: "$0"
-  },
-  {
-    id: 6,
-    title: "Lending Pool",
-    description: "Lend your crypto and earn interest",
-    apy: "8.9%",
-    minAmount: "$50",
-    icon: "🏦",
-    color: "text-blue-600",
-    status: "active",
-    balance: "$2,500 USDT",
-    earned: "+$18.75"
-  }
+type Referral = {
+  id: string;
+  name: string;
+  email: string;
+  joinedAt: string;
+  trades: number;
+  volumeUsd: number;
+  rewardUsd: number;
+  status: "active" | "pending";
+};
+
+const referrals: Referral[] = [
+  { id: "u1", name: "Alice Johnson", email: "alice@example.com", joinedAt: "2025-08-10", trades: 14, volumeUsd: 24567.23, rewardUsd: 36.84, status: "active" },
+  { id: "u2", name: "Bob Martinez", email: "bob@example.com", joinedAt: "2025-08-22", trades: 5, volumeUsd: 5230.54, rewardUsd: 7.85, status: "active" },
+  { id: "u3", name: "Chloe Kim", email: "chloe@example.com", joinedAt: "2025-09-02", trades: 2, volumeUsd: 980.13, rewardUsd: 1.47, status: "pending" },
+  { id: "u4", name: "David Liu", email: "david@example.com", joinedAt: "2025-09-05", trades: 9, volumeUsd: 11234.88, rewardUsd: 16.85, status: "active" },
+  { id: "u5", name: "Ella Singh", email: "ella@example.com", joinedAt: "2025-09-08", trades: 3, volumeUsd: 1850.0, rewardUsd: 2.78, status: "pending" },
 ];
 
-const getStatusBadge = (status: string) => {
+const getReferralStatusBadge = (status: string) => {
   switch (status) {
     case "active":
       return <Badge className="bg-green-500/20 text-green-400 border-green-500/30">Active</Badge>;
-    case "available":
-      return <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">Available</Badge>;
+    case "pending":
+      return <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">Pending</Badge>;
     default:
       return null;
   }
 };
 
 export function EarnPage() {
+  const [copied, setCopied] = useState(false);
+  const referralCode = "GOJI-7F3K2Q";
+  const referralLink = `https://goji.example.com/signup?ref=${referralCode}`;
+
+  const totals = useMemo(() => {
+    const totalRefs = referrals.length;
+    const totalVolume = referrals.reduce((s, r) => s + r.volumeUsd, 0);
+    const totalRewards = referrals.reduce((s, r) => s + r.rewardUsd, 0);
+    return { totalRefs, totalVolume, totalRewards };
+  }, []);
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // no-op
+    }
+  };
   return (
     <div className="flex-1 p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-foreground mb-2">Earn</h1>
-        <p className="text-muted-foreground">Grow your crypto portfolio with earning opportunities</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Refer & Earn</h1>
+        <p className="text-muted-foreground">Invite friends, track their traded volume, and earn rewards</p>
       </div>
 
-      {/* Earning Stats */}
+      {/* Referral Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <TrendingUp className="w-4 h-4" />
-              Total APY
+              <Coins className="w-4 h-4" />
+              Total Referrals
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-400">8.7%</div>
-            <p className="text-xs text-muted-foreground">Average across all positions</p>
+            <div className="text-2xl font-bold">{totals.totalRefs}</div>
+            <p className="text-xs text-muted-foreground">Invited users</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
-              <Coins className="w-4 h-4" />
-              Active Positions
+              <TrendingUp className="w-4 h-4" />
+              Referred Volume
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
-            <p className="text-xs text-green-400">+1 this month</p>
+            <div className="text-2xl font-bold">${totals.totalVolume.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">All time trading volume</p>
           </CardContent>
         </Card>
 
@@ -129,12 +94,12 @@ export function EarnPage() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
               <Award className="w-4 h-4" />
-              Total Earned
+              Rewards Earned
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$2,456.78</div>
-            <p className="text-xs text-muted-foreground">All time earnings</p>
+            <div className="text-2xl font-bold text-green-400">${totals.totalRewards.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground">From referred trades</p>
           </CardContent>
         </Card>
 
@@ -142,72 +107,88 @@ export function EarnPage() {
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center gap-2">
               <Zap className="w-4 h-4" />
-              This Month
+              Referral Code
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">$234.56</div>
-            <p className="text-xs text-green-400">+12.3% from last month</p>
+            <div className="text-lg font-mono">{referralCode}</div>
+            <div className="mt-3 flex items-center gap-2">
+              <div className="flex-1 truncate text-sm text-muted-foreground bg-[#0f0f0f] border border-border rounded-lg px-3 py-2">
+                {referralLink}
+              </div>
+              <Button variant="outline" onClick={copyLink} className="flex items-center gap-2">
+                {copied ? 'Copied' : 'Copy'}
+                <Copy className="w-4 h-4" />
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Earning Options */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {earningOptions.map((option) => (
-          <Card key={option.id} className="hover:shadow-lg transition-shadow">
-            <CardHeader>
+      {/* Referral List Table */}
+      <div className="bg-black rounded-lg overflow-hidden border border-border">
+        <div className="hidden md:block">
+          <table className="w-full">
+            <thead className="border-b border-border">
+              <tr className="text-left">
+                <th className="p-4 font-medium text-muted-foreground">User</th>
+                <th className="p-4 font-medium text-muted-foreground">Joined</th>
+                <th className="p-4 font-medium text-muted-foreground text-right">Trades</th>
+                <th className="p-4 font-medium text-muted-foreground text-right">Traded Volume</th>
+                <th className="p-4 font-medium text-muted-foreground text-right">Reward</th>
+                <th className="p-4 font-medium text-muted-foreground text-center">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {referrals.map((r) => (
+                <tr key={r.id} className="border-b border-border hover:bg-accent/50 transition-colors">
+                  <td className="p-4">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-foreground">{r.name}</span>
+                      <span className="text-sm text-muted-foreground">{r.email}</span>
+                    </div>
+                  </td>
+                  <td className="p-4">{new Date(r.joinedAt).toLocaleDateString()}</td>
+                  <td className="p-4 text-right">{r.trades}</td>
+                  <td className="p-4 text-right">${r.volumeUsd.toLocaleString()}</td>
+                  <td className="p-4 text-right">${r.rewardUsd.toLocaleString()}</td>
+                  <td className="p-4 text-center">{getReferralStatusBadge(r.status)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile cards */}
+        <div className="md:hidden p-4 space-y-4">
+          {referrals.map((r) => (
+            <div key={r.id} className="bg-card border border-border rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div>
+                  <div className="font-semibold text-foreground">{r.name}</div>
+                  <div className="text-sm text-muted-foreground">{r.email}</div>
+                </div>
+                {getReferralStatusBadge(r.status)}
+              </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-muted rounded-full flex items-center justify-center">
-                    <span className={`text-xl font-bold ${option.color}`}>{option.icon}</span>
-                  </div>
-                  <div>
-                    <CardTitle className="text-lg">{option.title}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{option.description}</p>
-                  </div>
-                </div>
-                {getStatusBadge(option.status)}
+                <div className="text-sm text-muted-foreground">Joined</div>
+                <div>{new Date(r.joinedAt).toLocaleDateString()}</div>
               </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">APY</span>
-                  <span className="text-xl font-bold text-green-400">{option.apy}</span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Min Amount</span>
-                  <span className="text-sm font-medium">{option.minAmount}</span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Your Balance</span>
-                  <span className="text-sm font-medium">{option.balance}</span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Earned</span>
-                  <span className="text-sm font-medium text-green-400">{option.earned}</span>
-                </div>
-
-                <div className="pt-2">
-                  {option.status === "active" ? (
-                    <Button variant="outline" className="w-full">
-                      <Lock className="w-4 h-4 mr-2" />
-                      Manage Position
-                    </Button>
-                  ) : (
-                    <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
-                      Start Earning
-                    </Button>
-                  )}
-                </div>
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">Trades</div>
+                <div>{r.trades}</div>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">Volume</div>
+                <div>${r.volumeUsd.toLocaleString()}</div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">Reward</div>
+                <div className="text-green-400">${r.rewardUsd.toLocaleString()}</div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

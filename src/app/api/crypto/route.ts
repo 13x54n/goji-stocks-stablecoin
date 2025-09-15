@@ -40,6 +40,19 @@ const cryptoData = [
     image: "https://assets.coingecko.com/coins/images/4128/large/solana.png",
     isPositive: false,
     lastUpdated: new Date().toISOString()
+  },
+  {
+    id: 4,
+    name: "USDC",
+    symbol: "USDC",
+    price: 1.00,
+    change: 0.00,
+    changePercent: 0.00,
+    marketCap: 1000000000000,
+    volume: 1000000000000,
+    image: "https://assets.coingecko.com/coins/images/6319/standard/usdc.png",
+    isPositive: true,
+    lastUpdated: new Date().toISOString()
   }
 ];
 
@@ -54,7 +67,7 @@ export async function GET(request: NextRequest) {
 
     // Filter by symbol if provided
     if (symbol) {
-      filteredData = filteredData.filter(crypto => 
+      filteredData = filteredData.filter(crypto =>
         crypto.symbol.toLowerCase().includes(symbol.toLowerCase()) ||
         crypto.name.toLowerCase().includes(symbol.toLowerCase())
       );
@@ -101,7 +114,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Crypto API error:', error);
-    
+
     return NextResponse.json({
       success: false,
       error: 'Failed to fetch crypto data',
@@ -118,7 +131,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    
+
     // In a real app, this would validate and store new crypto data
     return NextResponse.json({
       success: true,
@@ -133,7 +146,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error('Crypto POST error:', error);
-    
+
     return NextResponse.json({
       success: false,
       error: 'Failed to process crypto data',

@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Goji Stocks Stablecoin",
-  description: "Cryptocurrency trading platform",
+  title: "Goji | Trade Stocks & Stablecoins",
+  description: "Trade Stocks & Stablecoins from anywhere in the world.",
 };
 
 export default function RootLayout({

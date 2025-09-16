@@ -30,7 +30,7 @@ export function Sidebar({ activePage, setActivePage }: SidebarProps) {
       <div className="p-6">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 flex items-center justify-center">
-            <Image src="https://www.minginc.xyz/icons/icon.svg" alt="logo" width={52} height={52} className="rounded-lg" />
+            <Image src="https://avatars.githubusercontent.com/u/179059125?s=200&v=4" alt="logo" width={52} height={52} className="rounded-lg" />
           </div>
         </div>
       </div>

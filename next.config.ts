@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  experimental: {
+    // Disable Lightning CSS to avoid native binary requirement in some envs
+    optimizeCss: false,
+    // Also disable next/font css optimization path relying on lightningcss
+    optimizePackageImports: [],
+  },
   images: {
     remotePatterns: [
       {
@@ -30,6 +36,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'lh3.googleusercontent.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'avatars.githubusercontent.com',
         port: '',
         pathname: '/**',
       },

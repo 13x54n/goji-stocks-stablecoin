@@ -1,0 +1,10 @@
+{
+  "build": {
+    "env": {
+      "NEXT_EXPERIMENTAL_LIGHTNINGCSS": "false",
+      "LIGHTNINGCSS_FORCE_WASM": "true"
+    }
+  }
+}
+
+

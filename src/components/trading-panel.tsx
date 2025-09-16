@@ -365,6 +365,7 @@ export function TradingPanel() {
           <span className="text-gray-300">Withdraw cash</span>
         </div>
       </div>
+
     </div >
   );
 }

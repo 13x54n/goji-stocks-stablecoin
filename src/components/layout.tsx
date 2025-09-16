@@ -9,8 +9,9 @@ import { TransactionsPage } from "@/components/pages/transactions";
 import { EarnPage } from "@/components/pages/earn";
 import { LearningPage } from "@/components/pages/learning";
 import { CryptoList } from "@/components/crypto-list";
+import { SettingsPage } from "@/components/pages/settings";
 
-type Page = "home" | "assets" | "transactions" | "earn" | "learning" | "trade";
+type Page = "home" | "assets" | "transactions" | "earn" | "learning" | "trade" | "settings";
 
 export function Layout() {
   const [activePage, setActivePage] = useState<Page>("trade");
@@ -27,6 +28,8 @@ export function Layout() {
         return <EarnPage />;
       case "learning":
         return <LearningPage />;
+      case "settings":
+        return <SettingsPage />;
       default:
         return <CryptoList />;
     }

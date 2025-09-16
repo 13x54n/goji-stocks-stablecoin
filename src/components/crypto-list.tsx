@@ -275,11 +275,9 @@ export function CryptoList() {
             <thead className="border-b border-border">
               <tr className="text-left">
                 <th className="p-4 font-medium text-muted-foreground">Name</th>
-                <th className="p-4 font-medium text-muted-foreground text-right">Price</th>
+                <th className="p-4 font-medium text-muted-foreground text-center">Price</th>
                 <th className="p-4 font-medium text-muted-foreground text-right">Change</th>
-                <th className="p-4 font-medium text-muted-foreground text-right">Market Cap</th>
-                <th className="p-4 font-medium text-muted-foreground text-center">Chart</th>
-                <th className="p-4 font-medium text-muted-foreground text-center">Action</th>
+                <th className="p-4 font-medium text-muted-foreground text-center">Market Cap</th>
                 <th className="p-4 font-medium text-muted-foreground text-center">Favorite</th>
               </tr>
             </thead>
@@ -306,7 +304,7 @@ export function CryptoList() {
                   </td>
 
                   {/* Price */}
-                  <td className="p-4 text-right">
+                  <td className="p-4 text-center">
                     <div className="font-semibold text-foreground">{crypto.price}</div>
                   </td>
 
@@ -324,22 +322,10 @@ export function CryptoList() {
                   </td>
 
                   {/* Market Cap */}
-                  <td className="p-4 text-right">
+                  <td className="p-4 text-center">
                     <div className="text-sm text-muted-foreground">
                       {crypto.marketCap}
                     </div>
-                  </td>
-
-                  {/* Sparkline */}
-                  <td className="p-4 text-center">
-                    <Sparkline isPositive={crypto.isPositive} />
-                  </td>
-
-                  {/* Buy Button */}
-                  <td className="p-4 text-center">
-                    <Button size="sm" className="bg-transparent hover:bg-transparent text-foreground">
-                      Buy
-                    </Button>
                   </td>
 
                   {/* Favorite */}

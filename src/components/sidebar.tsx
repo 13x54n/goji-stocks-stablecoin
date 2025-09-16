@@ -1,11 +1,11 @@
 "use client";
 
-import { Home, Clock, TrendingUp, Award, GraduationCap, LogOut, Fingerprint } from "lucide-react";
+import { Home, Clock, TrendingUp, Award, GraduationCap, Settings, Fingerprint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useAuth } from "@/contexts/AuthContext";
 
-type Page = "home" | "assets" | "transactions" | "earn" | "learning" | "trade";
+type Page = "home" | "assets" | "transactions" | "earn" | "learning" | "trade" | "settings";
 
 interface SidebarProps {
   activePage: Page;
@@ -18,6 +18,7 @@ const navigationItems = [
   { icon: TrendingUp, label: "Transactions", page: "transactions" as Page },
   { icon: Award, label: "Earn", page: "earn" as Page },
   { icon: GraduationCap, label: "Learning", page: "learning" as Page },
+  { icon: Settings, label: "Settings", page: "settings" as Page },
 ];
 
 export function Sidebar({ activePage, setActivePage }: SidebarProps) {
